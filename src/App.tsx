@@ -1,6 +1,9 @@
 import { useState, useRef, type ChangeEvent, type DragEvent } from 'react';
 import './App.css';
 import ReactMarkdown from "react-markdown"
+
+const API_URL = import.meta.env.VITE_API_URL?.replace(/\/+$/, '') ?? '';
+
 function App() {
   const [prompt, setPrompt] = useState('');
   const [files, setFiles] = useState<File[]>([]);
@@ -55,7 +58,7 @@ function App() {
             const form = new FormData();
             form.append("file", file);
 
-            const r = await fetch("/api/upload", {
+            const r = await fetch(`${API_URL}/api/upload`, {
               method: "POST",
               body: form,
             });
@@ -73,7 +76,7 @@ function App() {
         ? `${prompt}\n\nAttached files: ${uploadedNames.join(", ")}`
         : `Please analyze attached files: ${uploadedNames.join(", ")}`;
 
-      const res = await fetch("/api/chat", {
+      const res = await fetch(`${API_URL}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
